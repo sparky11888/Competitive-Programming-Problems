@@ -1,0 +1,24 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.regex.*;
+
+public class Main {
+	
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		boolean beginning = true;
+		while (input.hasNextLine()){
+			String line = input.nextLine();
+			while(line.contains("\"")){
+				if(beginning){
+					line = line.replaceFirst("\"", "``");
+				}
+				else{
+					line = line.replaceFirst("\"", "''");
+				}
+				beginning = !beginning;
+			}
+			System.out.println(line);
+		}
+	}
+}
