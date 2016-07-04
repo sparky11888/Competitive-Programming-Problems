@@ -1,0 +1,38 @@
+UVA 11586 - Train Tracks
+
+//Algorithm Approach --> Greedy Solution
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		input.nextLine();
+		for(int i = 0;i<iterations;i++){
+			
+			int mm=0,ff=0;
+			String in = input.nextLine();
+			in=in.trim();
+		//	System.out.println(in);
+			String [] lines = in.split(" ");
+			for (int j=0;j<lines.length;j++){
+				if (lines[j].equals("MM")){
+				//	System.out.println("Entered: "+ lines[j]);
+					mm++;
+				}
+				if(lines[j].equals("FF")){
+				//	System.out.println("Entered: "+ lines[j]);
+					ff++;
+				}
+			}
+		//	System.out.println(mm+" "+ff);
+			if (mm==ff&&lines.length!=1)
+				System.out.println("LOOP");
+			else
+				System.out.println("NO LOOP");
+		}
+	}
+	
+}
