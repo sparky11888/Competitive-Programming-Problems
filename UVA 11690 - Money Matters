@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+public class Main {
+	public static void main (String []args) throws IOException{
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		Main inst = new Main();
+		for (int i =0;i<iterations;i++){
+			int n,m;
+			n=input.nextInt();
+			m=input.nextInt();
+			unionfind group = inst.new unionfind(n);
+			int[] sum = new int [n];
+			//group.totals = new int [n];
+			for (int j=0;j<n;j++){
+				group.totals[j]=input.nextInt();
+			}
+			for(int j=0;j<m;j++){
+				int in1,in2;
+				in1=input.nextInt();
+				in2=input.nextInt();
+				
+			//	System.out.println(in1+" "+in2);
+				group.union(in1, in2);
+			//	int sum = totals[i]+totals[j];
+			}
+			for (int j=0;j<n;j++){
+				sum[group.find(group.uf[j])]+=group.totals[j];
+			}
+			
+			boolean possible=true;
+			
+			for (int j=0;j<n;j++){
+				if (sum[j]!=0){
+					possible=false;
+					break;
+				}
+			}
+		
+				
+			if (possible)
+				System.out.println("POSSIBLE");
+			else
+				System.out.println("IMPOSSIBLE");
+		}
+		
+	}
+	class unionfind {
+		int [] uf;
+		int [] totals;
+	//	ArrayList<Integer> sets;
+		public unionfind (int n){
+			uf = new int[n];
+			totals=new int [n];
+	//		sets = new ArrayList<Integer>();
+			for (int i =0;i<n;i++){
+				uf[i]=i;
+			//	System.out.println("UF: "+uf[i]); 
+			}
+		}
+		public int find (int i){
+			if (uf[i]!=i){
+				uf[i]=find(uf[i]);
+			}
+			return uf[i];
+		}
+		public void union (int i,int j){
+			int root1=find(i);
+			int root2=find(j);
+			
+			uf[root1]=root2;
+		
+			
+		}
+		
+	}
+}
