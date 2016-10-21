@@ -1,0 +1,58 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	//static int [] primes = new int [1000000];
+	static int [] primefactor =new int [1000001];
+	static int [] numprimefactors = new int [1000001];
+//	static ArrayList<Integer> primenum = new ArrayList<Integer>();
+//	static ArrayList<Integer> compositenum=new ArrayList<Integer>();
+	public static void main (String [] args){
+		 Scanner input=new Scanner (System.in);
+//		 Arrays.fill(primes, 1);
+//		 primes[0]=0;
+//		 primes[1]=0;
+		 numprimefactors[0]=0;
+		 numprimefactors[1]=0;
+		 sieveoferatothenes();
+		 
+		 //System.out.println("DFDAFDF");
+		 while (input.hasNextInt()){
+			 int num = input.nextInt();
+			 int count =0;
+			 for (int i=0;i<num;i++){
+				 int quer = input.nextInt();
+				 if (numprimefactors[quer]==2)
+					 count++;
+			 }
+			 System.out.println(count);
+		 }
+	}
+	static void sieveoferatothenes (){
+		for (int i =2;i*i<primefactor.length;i++){
+			if (primefactor[i]==0){
+				int num=i;
+
+				//System.out.println("Added: "+i);
+				while((i*num)<primefactor.length){
+					//System.out.println(i*num);
+					primefactor[i*num]=i;
+					num++;
+				}
+			}
+		}
+		for (int i =2;i<primefactor.length;i++){
+			if (primefactor[i]==0){
+			//	System.out.println(i);
+				primefactor[i]=i;
+			}
+		}
+		for (int i = 2;i<primefactor.length;i++){
+			numprimefactors[i]=1+numprimefactors[i/primefactor[i]];
+//			if (numprimefactors[i]==2)
+//				compositenum.add(i);
+		}
+
+	}
+	
+}
