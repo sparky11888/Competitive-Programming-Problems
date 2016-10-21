@@ -1,0 +1,88 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int casenum=1;
+ 	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main();
+		while(input.hasNext()){
+		
+			int mapsnum=input.nextInt();
+			if (mapsnum==0)
+				break;
+			if (casenum!=1){
+				System.out.println();
+			}
+			int [][]graph = new int [mapsnum][mapsnum];
+			ArrayList <String >locations = new ArrayList<String>();
+			input.nextLine();
+			for (int i=0;i<mapsnum;i++){
+				locations.add(input.nextLine());
+			}
+			int edges = input.nextInt();
+			input.nextLine();
+			for (int i =0;i<edges;i++){
+				String []data = input.nextLine().split(" ");
+				int b1=locations.indexOf(data[0]);
+				int b2=locations.indexOf(data[1]);
+				graph[b1][b2]=1;
+				graph[b2][b1]=1;
+			}
+			ArrayList<String>cameras=new ArrayList<String>();
+			int [] vis = new int [locations.size()];
+			int original = m.connectedcomp(graph,vis);
+		//	System.out.println(original);
+			
+			for (int i =0; i<graph.length;i++){
+				int [][] modifiedg = new int [graph.length][graph[0].length];
+				for (int j =0;j<graph.length;j++){
+					for (int k=0;k<graph.length;k++){
+						if (k==i||j==i){
+							modifiedg[j][k]=0;
+						}
+						else{
+							modifiedg[j][k]=graph[j][k];
+						}
+					}
+				}
+				int [] modvis = new int [locations.size()];
+				modvis[i]=1;
+				int newconn=m.connectedcomp(modifiedg,modvis);
+	//			System.out.println("Modfied CC: "+newconn);
+				if(newconn>original){
+					cameras.add(locations.get(i));
+				}	
+
+	 		}	
+			Collections.sort(cameras);
+			System.out.println("City map #"+casenum+": "+ cameras.size()+ " camera(s) found");
+			for (String s: cameras){
+				System.out.println(s);
+			}
+			
+			casenum++;
+		}
+	}
+ 	int connectedcomp(int [][] graph, int [] visited){
+ 		int cc =0;
+ 		for (int i =0;i<graph.length;i++){
+ 			if (visited[i]!=1){
+ 				visited[i]=1;
+ 				cc++;
+ 				visited=dfs(i,graph,visited);
+ 			}
+ 		}
+ 		return cc;
+ 		
+ 	}
+ 	int[] dfs(int node,int [][]graph,int []visited){
+ 		for (int i=0;i<graph.length;i++){
+ 			if (node!=i&&graph[node][i]==1&&visited[i]!=1){
+ 				visited[i]=1;
+ 				visited = dfs(i,graph,visited);
+ 			}
+ 		}
+ 		return visited;
+ 	}
+}
