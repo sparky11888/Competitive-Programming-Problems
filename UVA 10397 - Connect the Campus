@@ -1,0 +1,133 @@
+import java.io.*;
+import java.util.*;
+class distancepair{
+	int x1,y1;
+	double distance;
+	distancepair(int x,int y, double dist){
+		x1=x;
+		y1=y;
+		distance=dist;
+	}
+	public String toString (){
+		return ("X: "+x1+" Y: "+ y1+" Dist: "+distance);
+	}
+}
+
+public class Main {
+	static int [] ufvertex;
+	static int [] size;
+	static double [] x;
+	static double [] y;
+	
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main ();
+		while(input.hasNextInt()){
+			int numbuildings = input.nextInt();
+			ufvertex=new int[numbuildings];
+			size=new int [numbuildings];
+			x=new double[numbuildings];
+			y = new double[numbuildings];
+			
+			for (int i=0;i<numbuildings;i++){
+				ufvertex[i]=i;
+				size[i]=1;
+				x[i]=input.nextDouble();
+				y[i]=input.nextDouble();
+			}
+			
+			int cables=input.nextInt();
+			for (int i =0;i<cables;i++){
+				int build1 = input.nextInt()-1;
+				int build2=input.nextInt()-1;
+				if (!m.isconnected(build1, build2)){
+					m.union(build1, build2);
+				}
+			}
+			
+			double distance = m.findspantree();
+			distance = Math.round(distance*100)/(double)100;
+			System.out.printf("%.02f\n", distance);
+		}
+	}
+	
+	double findspantree(){
+		int [][] visited=new int [x.length][y.length];
+		ArrayList<distancepair>dist=new ArrayList<distancepair>();
+		for (int i =0;i<x.length;i++){
+			for (int j=0;j<y.length;j++){
+				if (i!=j&&(visited[i][j]!=1||visited[j][i]!=1)){
+					visited[i][j]=1;
+					visited[j][i]=1;
+					double dis= distance(i,j);
+					dist.add(new distancepair(i,j,dis));
+				}
+			}
+		}
+		double add=0;
+		Comparator <distancepair> c = new Comparator<distancepair>(){
+			public int compare(distancepair x, distancepair y){
+				if (x.distance<y.distance)
+					return -1;
+				else if (x.distance>y.distance)
+					return 1;
+				return 0;
+			}
+		};
+		Collections.sort(dist, c);
+		
+		for(distancepair i:dist){
+		//	System.out.println(i);
+		//	String [] data = i.split(" ");
+		
+			double dis = i.distance;
+		//	System.out.println(dis+"****");
+			//double d2=100.12432142104980301493841309481034918;
+			//System.out.println(d2);
+			int v1=i.x1;
+			int v2=i.y1;
+			if (!isconnected(v1,v2)){
+				add+=dis;
+				union(v1,v2);
+			}
+		}
+			
+		return add;
+	}
+	double distance(int build1,int build2){
+		double x1,x2,y1,y2;
+		x1=x[build1];
+		x2=x[build2];
+		y1=y[build1];
+		y2=y[build2];
+		
+		double dist = Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2));
+		return dist;
+	}
+	int find (int p){
+		while(p!=ufvertex[p]){
+			ufvertex[p]=ufvertex[ufvertex[p]];
+			p=ufvertex[p];
+		}
+		return p;
+	}
+	void union (int p, int q){
+		p=find(p);
+		q=find(q);
+		if (p==q)
+			return;
+		if (size[p]>size[q]){
+			ufvertex[q]=p;
+			size[p]+=size[q];
+		}
+		else{
+			ufvertex[p]=q;
+			size[q]+=size[p];
+		}
+	}
+	boolean isconnected(int p,int q){
+		return find(p)==find(q);
+	}
+
+
+}
