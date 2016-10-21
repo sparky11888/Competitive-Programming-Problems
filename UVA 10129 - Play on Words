@@ -1,0 +1,122 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int [] degree;
+	static int [] out;
+	static int [] inc;
+	static int [] uf;
+	static int []visited;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations=input.nextInt();
+		for(int i=0;i<iterations;i++){
+			int plates =input.nextInt();
+//			out=new int [26];
+//			inc=new int [26];
+			degree=new int[26];
+			uf =new int[26];
+			visited=new int [26];
+			for (int j =0;j<26;j++){
+				uf[j]=j;
+			}
+			input.nextLine();
+			for(int j =0;j<plates;j++){
+				String word =input.nextLine();
+				char fl,ll;
+				fl=(word.charAt(0));
+				ll=(word.charAt(word.length()-1));
+				int v1,v2;
+				v1=fl-97;
+				v2=ll-97;
+				union(v1,v2);
+				degree[v1]++;
+				degree[v2]--;
+				visited[v1]=1;
+				visited[v2]=1;
+			//	System.out.println(word+" : "+fl+" "+ll +":"+v1+" "+v2);
+			}
+			boolean set=false;
+			boolean union=true;
+			int comp=-1;
+			int count=0;
+			boolean deg=true;
+			for(int j=0;j<26;j++){
+				if (uf[j]!=-1&&visited[j]==1){
+					if(set){
+						if(find(j)!=comp){
+							union=false;
+							break;
+						}
+					}
+					else{
+						comp=find(j);
+						set=true;
+					}
+				}
+				
+				if (degree[j]!=0){
+					if(Math.abs(degree[j])>1){
+						deg=false;
+						break;
+					}
+					else{
+						count++;
+					}
+					if(count>2){
+						deg=false;
+						break;
+					}
+				}
+			}
+			if(union&deg){
+				System.out.println("Ordering is possible.");
+			}
+			else
+				System.out.println("The door cannot be opened.");
+			
+////			int countodd =0;
+//			boolean poss=true;
+//			for (int j=0;j<26;j++){
+//				//System.out.println(inc[j]-out[j]);
+//				int dif =Math.abs(inc[j]-out[j]);
+//				if (dif!=0){
+//					countodd++;
+//				}
+//				if(dif>1){
+//					poss=false;
+//					break;
+//				}
+//					
+//				if (countodd>2){
+//					poss=false;
+//					break;
+//				}
+//			}
+//			if(poss){
+//				System.out.println("Ordering is possible.");
+//			}
+//			else
+//				System.out.println("The door cannot be opened.");
+		}
+	}
+	static int find (int p){
+		while(p!=uf[p]){
+			uf[p]=uf[uf[p]];
+			p=uf[p];
+		}
+		return p;
+	}
+	static void union (int p,int q){
+		int b1=find(p);
+		int b2=find(q);
+		if (b1==b2)
+			return;
+		else{
+			uf[b1]=b2;
+		}
+	}
+	static boolean isconnrected(int p,int q){
+		return (find(p)==find(q));
+	}
+}
