@@ -1,0 +1,76 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main ();
+		int dimensions = input.nextInt();
+		int [][] data = new int [dimensions][dimensions];
+		for (int i = 0; i < dimensions; i++){
+			for (int j = 0; j < dimensions; j++){
+				data[i][j]=input.nextInt();
+				//System.out.print(data[i][j] +" ");
+			}
+			//System.out.println();
+		}
+		m.maxSum(data);
+	}
+	void maxSum (int [][] data){
+		int maxSum=data[0][0];
+		int [] temp = new int [data.length];
+		int start = 0, finish=0, sum; 
+
+		
+		for (int i = 0; i < data[0].length;i++){
+			temp = new int [data.length];
+			
+			for (int j = i; j < data[0].length;j++){
+				
+				for (int k = 0; k < data.length; k++){
+					temp[k]+=data[k][j];
+				}
+				sum = kalgo (temp, start, finish, data.length);
+				
+				if (sum > maxSum){
+					maxSum=sum;
+//					left = i;
+//					right = j;
+//					top = start;
+//					bottom = finish;
+				}
+			}
+		}
+	System.out.println(maxSum);
+	}
+	int kalgo (int [] arr, int start, int finish, int n){
+		int sum =0, maxSum=0;
+		finish 	= -1;
+		int s2 = 0;
+		
+		for (int i = 0; i < n; i++){
+			sum += arr[i];
+			if (sum < 0){
+				sum =0;
+				s2=i+1;
+			}
+			else if (sum > maxSum){
+				maxSum = sum;
+				start = s2;
+				finish = i;
+			}
+		}
+		if (finish != -1)
+			return maxSum;
+		
+		maxSum=arr[0];
+		start=0;
+		finish = 0;
+		for (int i = 0; i <n; i++){
+			if (arr[i]>maxSum){
+				maxSum =arr[i];
+			}
+		}
+		return maxSum;
+	}
+}
