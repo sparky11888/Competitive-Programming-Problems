@@ -1,0 +1,108 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static ArrayList<String> drinks;
+	static int [] degree;
+	static ArrayList<String> edges;
+	static ArrayList<String >order;
+	static int casnum=1;
+//	static LinkedList order;
+//	static PriorityQueue drinks = new PriorityQueue ();
+	
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main();
+		while (input.hasNext()){
+			int numdrinks = input.nextInt();
+			degree=new int[numdrinks];
+			order =new ArrayList<String>();
+			drinks=new ArrayList<String> ();
+			input.nextLine();
+		//	System.out.println(numdrinks);
+			for (int i = 0; i<numdrinks;i++){
+				//drinks[i]=input.nextLine();
+				String drink = input.nextLine();
+		//		System.out.println(drink);
+				//drinks.add(drink);
+				drinks.add(drink);
+				degree[i]=0;
+			}
+			//input.nextLine();
+			int relations = input.nextInt();
+			edges =new ArrayList<>();
+		//	System.out.println(relations);
+			input.nextLine();
+			
+			for (int i = 0;i<relations;i++){
+				String []data=input.nextLine().split(" ");
+				String b1 =data[0];
+				String b2=data[1];
+				edges.add(b1+" "+b2);
+		//		System.out.println(drinks.indexOf(b2));
+				degree[drinks.indexOf(b2)]++;
+			}
+			int k=0;
+//			for (String d:drinks){
+//				System.out.println("Drinks: "+d+" Degree: "+degree[k]);
+//				k++;
+//			}
+			addval();
+			System.out.print("Case #"+casnum+": " +"Dilbert should drink beverages in this order:");
+			int i=0;
+			for (String d:order){
+				System.out.print(" "+d);
+				i++;
+			}
+			System.out.print(".\n");
+			System.out.println();
+			casnum++;
+		//	input.nextLine();
+		}
+	}
+	static void addval (){
+		do{
+			ArrayList<String>drinkrem=new ArrayList<String>();
+			for (int i =0;i<degree.length;i++){
+				if (degree[i]==0){
+					String drink=drinks.get(i);
+		//			System.out.println("PP Drink: "+ drink);
+					order.add(drink);
+				//	drinkrem.add(drink);
+					
+					
+					degree[drinks.indexOf(drink)]--;
+			//		System.out.println("Drink Remove: "+drink);
+					ArrayList<Integer>rem=new ArrayList<Integer>();
+					int k=0;
+					for (String e:edges){
+			//			System.out.println("EDGE: "+e);
+						String [] data=e.split(" ");
+				//		System.out.println("Drinnk1: "+data[0]+ "  Drink2: "+data[1]);
+						if (data[0].equals(drink)){
+			//				System.out.println("Inside");
+							degree[drinks.indexOf(data[1])]--;
+							rem.add(k);
+						}
+						k++;
+					}
+					int o=0;
+					for (int p:rem){
+			//			System.out.println("Removing: "+edges.get(p-o));
+						edges.remove(p-o);
+						o++;
+					}
+						
+					i=-1;	
+				}
+				
+			}
+		} while (!edges.isEmpty());
+		for (int i = 0;i<degree.length;i++){
+			if (degree[i]==0){
+				String drink=drinks.get(i);
+				order.add(drink);
+			}
+		}
+	}
+}
