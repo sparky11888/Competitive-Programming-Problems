@@ -1,0 +1,58 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main ();
+		int iter = input.nextInt();
+		for (int i = 0; i < iter; i++){
+			int numBuildings = input.nextInt();
+			//HashMap data = new HashMap ();
+			int [] height = new int[numBuildings];
+			int [] width = new int [numBuildings];
+			for (int j = 0; j < numBuildings; j ++){
+				height[j]=input.nextInt();
+			//	System.out.print(height[i]+ " ");
+			}
+			//System.out.println();
+			for (int j = 0; j < numBuildings; j++){
+				width[j]=input.nextInt();
+			//	System.out.print(width[j]+ " ");
+			}
+			//System.out.println();
+			System.out.println("Case " +(i+1)+". "+m.subseq(height, width,numBuildings));
+		}
+	}
+	String subseq (int [] height, int [] width, int index){
+		int maxinc=0, maxdec=0;
+		int [] seqinc =new int [index];
+		int [] seqdec =new int [index];
+		for(int i = 0; i <index; i++){
+			seqinc[i]=width[i];
+			seqdec[i]=width[i];
+		//	System.out.println("width: "+height[i]);
+		}
+		for (int i = 1; i <index; i++){
+			for (int j =0;j<i;j++){
+				if(height[i]>height[j]&&seqinc[i]<seqinc[j]+width[i])
+					seqinc[i]=seqinc[j]+width[i];
+				if(height[i]<height[j]&&seqdec[i]<seqdec[j]+width[i])
+					seqdec[i]=seqdec[j]+width[i];
+		//		System.out.println("Decr: "+seqdec[i]);
+		//		System.out.println("Incr: "+seqinc[i]);
+			}
+		}
+		for (int i = 0; i < index; i++){
+			if (maxinc <seqinc[i])
+				maxinc = seqinc[i];
+			if (maxdec < seqdec[i])
+				maxdec = seqdec[i];
+		}
+		
+		if (maxdec > maxinc)
+			return "Decreasing ("+maxdec+"). Increasing ("+maxinc+").";
+		else
+			return "Increasing ("+maxinc+"). Decreasing ("+maxdec+").";
+	}
+}
