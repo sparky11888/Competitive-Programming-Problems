@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static boolean stanwins;
+	public static void main (String[ ]args){
+		Scanner input = new Scanner (System.in);
+		while(input.hasNextInt()){
+			int quer = input.nextInt();
+			stanwins=true;
+			process(quer);
+		}
+	}
+	static void process(int q){
+		int num = 1;
+		while(num<q){
+			if (stanwins){
+				num = num*9;
+			}
+			else
+				num=num*2;
+			if (num>=q){
+				if (stanwins)
+					System.out.println("Stan wins.");
+				else
+					System.out.println("Ollie wins.");
+			}
+			stanwins=!stanwins;
+		}
+	}
+}
