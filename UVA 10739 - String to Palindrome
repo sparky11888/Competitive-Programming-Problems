@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int casnum=1;
+	static String q;
+	static String [] s1;
+	static int [] positions;
+	static int numopes;
+	static int ops;
+	static int [][]memoize;
+ 	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		input.nextLine();
+		for (int i =0;i<iterations;i++){
+			String quer = input.nextLine();
+			numopes = 0;
+			ops = 0;
+			memoize=new int [quer.length()][quer.length()];
+			for (int j=0;j<quer.length();j++){
+				Arrays.fill(memoize[j], -1);
+			}
+			if (quer.length()<2){
+				System.out.println("Case "+casnum+": "+numopes);
+			}
+			else{
+				q = quer;
+				s1 =quer.split("");
+				process();
+				System.out.println("Case "+casnum+": "+numopes);
+			}
+			casnum++;
+		}
+	}
+	static void process (){
+//		for (int i =0;i<s1.length;i++){
+//			System.out.print(s1[i]);
+//		}
+//		System.out.println();
+		numopes = value(0,s1.length-1);
+	}
+	static int value(int i, int j){
+		if (memoize[i][j]!=-1){
+			return memoize[i][j];
+		}
+		if (j-i<2){
+			if(i==j){
+				memoize[i][j]=0;
+				return 0;
+			}
+			if (i+1==j){
+				if (s1[i].equals(s1[j])){
+					memoize[i][j]=0;
+					return 0;
+				}
+				memoize[i][j]=1;
+				return 1;
+			}
+		}
+		if (s1[i].equals(s1[j])){
+			int ans=value(i+1,j-1);
+			memoize[i][j]=ans;
+			return ans;
+		}
+		else{
+			int delete,match,insert;
+			match = 1+ value (i+1,j);
+			insert = 1+value (i,j-1);
+			delete = 1+ value (i+1,j-1);
+			int ans = Math.min(insert, match);
+			ans = Math.min(ans, delete);
+			memoize[i][j]=ans;
+			return ans;
+		}
+	}
+}
