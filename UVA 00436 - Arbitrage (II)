@@ -1,0 +1,66 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	//static int [] data;
+	static double [][] arbitrage;
+	static ArrayList<String >currencies;
+	static int casnum=1;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		while(input.hasNext()){
+			int numcurrencies = input.nextInt();
+			if (numcurrencies==0){
+				break;
+			}
+			input.nextLine();
+			currencies = new ArrayList<String> () ;
+			arbitrage = new double [numcurrencies][numcurrencies];
+			for (int i =0;i<numcurrencies;i++){
+				String currency = input.nextLine();
+//				System.out.println(currency);
+				currencies.add(currency);
+			}
+			
+			int tablelength = input.nextInt();
+			input.nextLine();
+			for (int j =0;j<tablelength;j++){
+				String c1,c2;
+				double conversion;
+				c1=input.next();
+				c1=c1.trim();
+				conversion = input.nextDouble();
+				c2=input.next();
+				c2=c2.trim();
+				
+				arbitrage [currencies.indexOf(c1)][currencies.indexOf(c2)]=conversion;
+				
+//				System.out.println(c1);
+//				System.out.println(conversion);
+//				System.out.println(c2);
+			}
+			
+			if (floydw())
+				System.out.println("Case "+casnum+": Yes");
+			else{
+				System.out.println("Case "+casnum+": No");
+			}
+			
+			casnum++;
+			input.nextLine();
+		}
+	}
+	static boolean floydw (){
+		for (int k =0;k<currencies.size();k++){
+			for (int i = 0;i<currencies.size();i++){
+				for (int j = 0;j<currencies.size();j++){
+					arbitrage[i][j]=Math.max(arbitrage[i][j],arbitrage[i][k]*arbitrage[k][j]);
+					if (i==j&&arbitrage[i][j]>1){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}
