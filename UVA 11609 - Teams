@@ -1,0 +1,43 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+
+public class Main {
+	static int casnum=1;
+	public static void main (String [] args){
+		Scanner input=new Scanner (System.in);
+		int iterations = input.nextInt();
+		for (int i=0;i<iterations;i++){
+			int number = input.nextInt();
+			BigInteger mod = BigInteger.valueOf(1000000007);
+			//BigInteger answer = BigInteger.valueOf(2).pow(number-1).multiply(BigInteger.valueOf(number));
+			BigInteger answer=BigInteger.valueOf(number).multiply(BigInteger.valueOf(2).modPow(BigInteger.valueOf(number-1), mod)).mod(mod);
+			System.out.println("Case #"+casnum+": "+(answer));
+			casnum++;
+		}
+	}
+	static BigInteger power (BigInteger n, BigInteger p){
+		if (p.equals(BigInteger.ZERO)){
+			return BigInteger.ONE;
+		}
+		System.out.println(p.divide(BigInteger.valueOf(2)));
+		BigInteger ans = power(n,p.divide(BigInteger.valueOf(2)));
+		if (p.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO)){
+			return ans.multiply(ans);
+		}
+		else {
+			return ans.multiply(ans).multiply(n);
+		}
+	}
+	static BigInteger process1(BigInteger n){
+		BigInteger answer; 
+		
+		answer = power (BigInteger.valueOf(2),n.subtract(BigInteger.ONE));
+		System.out.println(answer);
+		answer = answer.multiply(n);
+		answer=answer.mod(BigInteger.valueOf(1000000007));
+		return answer;
+	}
+	
+}
