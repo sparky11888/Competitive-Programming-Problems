@@ -1,0 +1,16 @@
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.*;
+
+public class Main {
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		while (input.hasNextInt()){
+			int m = input.nextInt();
+			int n = input.nextInt();
+			System.out.println(m*n-1);
+		}
+	}
+}
