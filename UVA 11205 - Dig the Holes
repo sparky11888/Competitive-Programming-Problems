@@ -2,73 +2,85 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	static ArrayList<String[]> turnoff = new ArrayList <String[]>();
 	public static void main (String []args){
 		Scanner input = new Scanner (System.in);
-		String[] answer={"I","E","H","O","V","A"};
+		Main m = new Main();
 		int iter = input.nextInt();
-		for (int i = 0; i < iter; i++){
-			int length, width, crow=0, ccol = 0;
-			length =input.nextInt();
-			width = input.nextInt();
-			
+		input.nextLine();
+		
+		for (int p =0;p<iter;p++){
 			input.nextLine();
-			
-			String [][] cobble = new String [length][width];
-			for (int j = 0 ; j < length; j++){
-				String row = input.nextLine();
-				if (j==length-1){
-					ccol = row.indexOf("@");
-					crow=j;
-				}
-				String [] strchar = row.split("");
-				cobble[j]=strchar;
-				//System.out.println("Dfda");
-			}
-			for (int k = 0; k<=answer.length;k++){
-				//System.out.println("  dfdaf");
-				int row=0,col=0;
-				String dir ="";
-				for(int p=0;p<3;p++){
-					if (p==0){
-						row=crow;
-						col=ccol-1;
-						dir="left";
-					}
-					else if(p==1){
-						row=crow-1;
-						col=ccol;
-						dir="forth";
-					}
-					else{
-						row=crow;
-						col=ccol+1;
-						dir="right";
-					}
-					//System.out.println(row+" "+col);
-					if (!(row<0 || col<0||col>=width)){
-						//System.out.println("dfa");
-						if (k<answer.length){
-							//System.out.println(answer[k]);
-							//System.out.println(cobble[row][col]);
-							if (cobble[row][col].equals(answer[k])){
-								ccol=col;
-								crow=row;
-								System.out.print(dir+" ");
-								break;
-							}
-						}
-						else{
-							if (cobble[row][col].equals("#")){
-								ccol=col;
-								crow=row;
-								System.out.print(dir);
-								break;
-							}
-						}
-					}
-				}
-			}
-			System.out.println();
+			String[] guess=input.nextLine().split(" ");
+			String guess1=guess[0];
+			int same1=Integer.parseInt(guess[1]);
+			int inside1=Integer.parseInt(guess[2]);
+			guess=input.nextLine().split(" ");
+			String guess2=guess[0];
+			int same2=Integer.parseInt(guess[1]);
+			int inside2=Integer.parseInt(guess[2]);
+			if (m.match(guess1, same1, inside1, guess2, same2, inside2))
+				System.out.println("Possible");
+			else
+				System.out.println("Cheat");
 		}
 	}
+	boolean match (String guess1,int s1, int i1,String guess2,int s2,int i2){
+		String[] colors = {"R","G","B","Y","O","V"};
+		String [] combo = new String [4];
+		for(int i = 0; i < 6; i++){
+			for (int j=0;j<6;j++){
+				if (j!=i){
+					for(int h=0; h<6;h++){
+						if (h!=j && h!=i){
+							for(int y=0;y<6;y++){
+								if (y!=h&&y!=j&&y!=i){
+									combo[0]=colors[i];
+									combo[1]=colors[j];
+									combo[2]=colors[h];
+									combo[3]=colors[y];
+									boolean result = isfit(combo,guess1,guess2,s1,i1,s2,i2);
+									if (result)
+										return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	boolean isfit (String [] current,String g1, String g2,int s1,int i1,int s2, int i2){
+		int same=0;
+		int inside=0;
+		int same2=0;
+		int inside2=0;
+//		for(String s: current){
+//			System.out.print("Current: "+s);
+//		}
+//		System.out.println();
+		
+		for(int i = 0 ; i<current.length;i++){
+			if (Character.toString(g1.charAt(i)).equals(current[i]))
+				same++;
+			if (Character.toString(g2.charAt(i)).equals(current[i]))
+				same2++;
+			if(g1.contains(current[i])&&g1.indexOf(current[i])!=i)
+				inside++;
+			if(g2.contains(current[i])&&g2.indexOf(current[i])!=i)
+				inside2++;
+		}
+//		System.out.print(same);
+//		System.out.print(same2);
+//		System.out.print(inside);
+//		System.out.print(inside2);
+//		System.out.println();
+		if (same==s1&&same2==s2&&inside==i1&&inside2==i2)
+			return true;
+		else
+			return false;
+					
+	}
+
 }
