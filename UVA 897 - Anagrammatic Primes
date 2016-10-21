@@ -1,0 +1,92 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+
+public class Main {
+	static int [] primes=new int[100000001];
+	static int [] annagramprimes = {2,3,5,7,11,13,17,31,37,71,73,79,97,113,131,199,311,337,373,733,919,991};
+	public static void main (String [] args){
+		primes[0]=0;
+		primes[1]=0;
+		Arrays.fill(primes, 1);
+		Scanner input = new Scanner (System.in);
+		//sieveofeartosthenes();
+		while(input.hasNextLine()){
+			int num = input.nextInt();
+			if (num==0)
+				break;
+			if (num>=1000)
+				System.out.println(0);
+			else{
+				process(num);
+			}
+			
+		}
+	}
+	static void process (int num){
+		int start = num;
+		int end =0;
+		int endplace=0;
+		for(int i =0;i<=8;i++){
+			if (Math.pow(10, i)>start){
+				end=(int)Math.pow(10, i);
+				endplace=i;
+				break;
+			}
+		}
+		for (int j=0;j<annagramprimes.length;j++){
+			if (annagramprimes[j]>start&&annagramprimes[j]<end){
+				System.out.println(annagramprimes[j]);
+				return;
+			}
+			if (annagramprimes[j]>=end){
+				System.out.println(0);
+				return;
+			}
+		}
+		System.out.println("0");
+	}
+	static void sieveofeartosthenes(){
+		for (int i =2;i<Math.sqrt(primes.length);i++){
+			//System.out.println("D");
+			if (primes[i]==1){
+//				annagrammatic(i);
+		//		normprimes.add(i);
+				int n = 2;
+				while ((n*i)<primes.length){
+					primes[n*i]=0;
+					n++;
+				}
+			}
+		}
+	}
+	static void annagrammatic(int n){
+		if (n==2){
+	//		annagprimes.add(n);
+			return;
+		}
+		else{
+			String [] digi = digits(n).split("");
+			int [] diginum=new int [digi.length];
+			for (int i=0;i<diginum.length;i++ ){
+//				diginum[i]=Integer.parseInt(digi[diginum.length-1-i]);
+//				System.out.println(diginum[i]);
+			}
+			
+		}
+	}
+	static void combos (int n){
+		HashSet possible = new HashSet ();
+
+	}
+	static String digits (int n){
+		String dig ="";
+		while (n>0){
+			int place = n%10;
+			dig=place+dig;
+			n=n/10;
+		}
+		return dig;
+	}
+}
