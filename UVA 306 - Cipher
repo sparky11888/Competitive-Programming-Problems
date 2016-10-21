@@ -1,0 +1,74 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int [] positions;
+	static String [] answer;
+	static int [] cyclesize;
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		while(input.hasNextLine()){
+			int length = input.nextInt();
+			if(length==0)
+				break;
+			positions = new int[length];
+			answer = new String [length];
+			cyclesize=new int[length];
+			for (int i =0;i<length;i++){
+				positions[i]=input.nextInt();
+			}
+			for(int i =0;i<length;i++){
+				int count = 1;
+				int j = positions[i];
+				while (j!=(i+1)){
+					j=positions[j-1];
+					count++;
+				}
+				cyclesize[i]=count;
+			}
+			while(input.hasNextLine()){
+				int k = input.nextInt();
+				if (k==0){
+					break;
+				}
+				String p = input.nextLine();
+				p= p.substring(1);
+				if(p.length()<length){
+				//	System.out.println("SDFD");
+					for (int i=p.length();i<length;i++){
+						p+=" ";
+					}
+					
+				}
+			//	System.out.println(p.length());
+			//	System.out.println(k);
+			//	System.out.println(p);
+				cipher(k, p);
+			}
+			System.out.println();
+		}
+	}
+	static void cipher(int k, String p){
+	//	System.out.println(p);
+		for(int i =1;i<=p.length();i++){
+			String s = p.substring(i-1,i);
+		//	System.out.println(s + (positions[i-1]-1));
+			
+			int pos = k%cyclesize[i-1];
+			int posf = i-1;
+			for (int j =0;j<pos;j++){
+				posf=positions[posf]-1;
+			}
+			
+			answer[posf]=s;
+		}
+		p="";
+		for(int i =0;i<positions.length;i++){
+		//	System.out.println(i+" "+answer[i]);
+			p+=answer[i];
+			
+		}
+		System.out.println(p);
+		
+	}
+}
