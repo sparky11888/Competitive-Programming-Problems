@@ -1,0 +1,24 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		for(int i=0;i<iterations;i++){
+			int wins = input.nextInt();
+			double prob = input.nextDouble();
+			double answer=0;
+			for (int j=0;j<wins;j++){
+				double temp = Math.pow(1-prob, j);
+				for(int k=0;k<wins-1;k++){
+					temp*=((double)(wins+j-k-1)/(double)(1+k));
+//				
+				}
+				answer+=temp;
+			}
+			answer*=Math.pow(prob, wins);
+			System.out.printf("%.2f\n",answer);
+		}
+	}
+}
