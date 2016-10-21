@@ -1,0 +1,170 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+//	static ArrayList< String>  recept;
+	static ArrayList< String>  device;
+//	static ArrayList< String>  extadapt;
+	static ArrayList<String> values;
+	
+	static HashSet <String> receptacles;
+	static HashSet <String> extra;
+	static String [] recept;
+	static int [] receptweight;
+	static ArrayList <String >frecepts;
+	static String [] items;
+	static String [] adapters;
+	static int [][] resgraph;
+	static int minedge;
+	static int []vertex;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		for (int i=0;i<iterations;i++){
+			int receptables = input.nextInt();
+			input.nextLine();
+			recept=new String[receptables];
+			receptacles=new HashSet<String>();
+			for (int j =0;j<receptables;j++){
+				String data = input.next();
+				recept[j]=data;
+				receptacles.add(data);
+				//System.out.println(recept.get(j));
+			}
+			int devices =input.nextInt();
+			device=new ArrayList<String>();
+			items = new String[devices];
+			extra = new HashSet<String>();
+			input.nextLine();
+			for(int j=0;j<devices;j++){
+				items[j]=input.nextLine();
+				String [] data = items[j].split(" ");
+				device.add(data[0]);
+
+				if(!receptacles.contains(data[1]))
+					extra.add(data[1]);
+				//System.out.println(device.get(j));
+			}
+			
+			int adapt=input.nextInt();
+			input.nextLine();
+			adapters=new String[adapt];
+			for(int j=0;j<adapt;j++){
+				adapters[j]=input.nextLine();
+				//System.out.println(adapters[j]);
+				String [] data = adapters[j].split(" ");
+				if (!receptacles.contains(data[0]))
+					extra.add(data[0]);
+				if (!receptacles.contains(data[1]))
+					extra.add(data[1]);
+			}
+			receptweight=new int[receptacles.size()];
+			frecepts = new ArrayList<String>();
+			for (String p: receptacles){
+				frecepts.add(p);
+				//System.out.println(p);
+				receptweight[frecepts.indexOf(p)]++;
+			}
+		
+			
+			
+			values=new ArrayList<String>();
+			values.add("StartingPoint");
+//			values.addall
+//			values.addAll(recept);
+//			values.addAll(extadapt);
+//			values.addAll(device);
+			values.addAll(device);
+			values.addAll(extra);
+			values.addAll(receptacles);
+			values.add("EndingPoint");
+			buildresgraph();
+			vertex=new int[values.size()];
+			int mf =maxflow();
+			
+//			for (int h =0;h<resgraph.length;h++){
+//				for(int j=0;j<resgraph.length;j++){
+//					System.out.print(resgraph[h][j]+" ");
+//				}
+//				System.out.println();
+//			}
+//			
+			System.out.println(device.size()-mf);
+			if (i!=iterations-1)
+				System.out.println();
+		}
+	}
+	static int maxflow (){
+		int maxf=0;
+		minedge=0;
+		Queue <Integer> q = new LinkedList<Integer>();
+		int []distance=new int[resgraph.length];
+		Arrays.fill(distance, -1);
+		distance[0]=0;
+		q.add(0);
+		Arrays.fill(vertex, -1);
+		while(!q.isEmpty()){
+			int currvertex = q.remove();
+	//		System.out.println("Current Vertex _______" +currvertex);
+			if(currvertex==resgraph.length-1){
+	//			System.out.println("BREAK: BFS complete");
+				break;
+			}
+			for (int i=0;i<resgraph.length;i++){
+				
+				if (resgraph[currvertex][i]>0&&distance[i]==-1){
+	//				System.out.println("DFDAPOOP");
+					distance[i]=distance[currvertex]+resgraph[currvertex][i];
+	//				System.out.println("DISTANCE! "+i+" "+distance[i]);
+					q.add(i);
+					vertex[i]=currvertex;
+				}
+			}
+		}
+		augment(resgraph.length-1, 100000000);
+		//System.out.println("***"+minedge);
+		if (minedge==0){
+			return maxf;
+		}
+		else{
+			return maxf+minedge+maxflow();
+		}
+	}
+	static void augment(int v, int min){
+		if(v==0){
+			minedge=min;
+			return;
+		}
+		else if (vertex[v]!=-1){
+			augment(vertex[v],Math.min(resgraph[vertex[v]][v],min));
+			resgraph[vertex[v]][v]-=minedge;
+			resgraph[v][vertex[v]]+=minedge;
+		}
+	}
+	static void buildresgraph(){
+		//System.out.println(2+recept.size()+extadapt.size()+device.size());
+		//System.out.println(values.size());
+		resgraph=new int [values.size()][values.size()];
+		for (int i =0;i<receptacles.size();i++){
+			resgraph[values.indexOf(frecepts.get(i))][resgraph.length-1]=1;
+		}
+		for (int i =0;i<device.size();i++){
+			resgraph[0][values.indexOf(device.get(i))]=1;
+		}
+		for (int i = 0;i<items.length;i++){
+			String [] data = items[i].split(" ");
+			resgraph[values.indexOf(data[0])][values.indexOf(data[1])]=1;
+		}
+		for (int i = 0;i<adapters.length;i++){
+			String [] data = adapters[i].split(" ");
+			resgraph[values.indexOf(data[0])][values.indexOf(data[1])]=10000000;
+		}
+//		for (int h =0;h<resgraph.length;h++){
+//			for(int j=0;j<resgraph.length;j++){
+//				System.out.print(resgraph[h][j]+" ");
+//			}
+//			System.out.println();
+//		}
+		
+	}
+}
