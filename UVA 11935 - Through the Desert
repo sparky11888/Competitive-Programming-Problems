@@ -1,0 +1,55 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	public static void main (String [ ]args){
+		Scanner input = new Scanner (System.in);
+		while (input.hasNextLine()){
+			double cposition=0;
+			double processedposition=0;
+			double gasneeded=0, finalgasneeded=0;
+			double rate=0;
+			double less=0;
+			String data="";
+			Boolean end =false;
+			do {
+				data = input.nextLine();
+				
+				if (data.equals("0 Fuel consumption 0")){
+					end=true;
+					break;
+				}
+
+				String [] dataspl = data.split(" ");
+				processedposition = Integer.parseInt(dataspl[0]);
+
+				gasneeded+=(processedposition-cposition)*rate/100.0;
+				gasneeded+=(processedposition-cposition)*less;
+	
+				finalgasneeded=Math.max(finalgasneeded,gasneeded);
+				if (dataspl[1].equals("Goal")){
+					break;
+				}
+				else if (dataspl[1].equals("Fuel")){
+					rate = Integer.parseInt(dataspl[3]);
+				}
+				
+				else if (dataspl[1].equals("Leak")){
+					less++;
+				}
+				else if (dataspl[1].equals("Mechanic")){
+					less=0;
+				}
+				else{
+					gasneeded=0;
+				}
+				cposition = processedposition;
+			} while(input.hasNextLine());
+			if (end)
+				break;
+			finalgasneeded = Math.round(finalgasneeded * 1000.0) / 1000.0;
+			System.out.println(String.format("%.3f", finalgasneeded));
+			
+		}
+	}
+}
