@@ -1,0 +1,34 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		int iterations= input.nextInt();
+		input.nextLine();
+
+		for (int i =0;i<iterations;i++){
+			input.nextLine();
+			String quer = input.nextLine();
+			if (i!=0){
+				System.out.println();
+			}
+			process(quer);
+			
+		}
+	}
+	static void process (String q){
+		
+		for (int i =1;i<=q.length();i++){
+			String matc = q.substring(0,i);
+			String target ="";
+			while(target.length()<q.length()){
+				target+=matc;
+			}
+			if(target.equals(q)){
+				System.out.println(matc.length());
+				break;
+			}
+		}	
+	}
+}
