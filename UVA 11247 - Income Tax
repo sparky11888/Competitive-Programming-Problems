@@ -1,0 +1,63 @@
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.*;
+
+public class Main {
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		while (input.hasNextLine()){
+			double m,x;
+			m=input.nextDouble();
+			x=input.nextDouble();
+			
+			if (m==0&&x==0)
+				break;
+			if (x==0){
+				System.out.println("Not found");
+			}
+			else if (x==100){
+				System.out.println("Not found");
+			}
+			else if (m==1){
+				System.out.println("Not found");
+			}
+			else{
+				//double disfactor = (double)1-(x/(double)100);
+				//double v = (double)((m-1)*100)/(double)(disfactor*(double)100);
+				//System.out.println(v);
+				double v = ((double)100*(m-1)/((double)100-x)); 
+				//System.out.println(v);
+				v=Math.floor(v);
+				if ((((m-1)*(double)100)%((double)100-x))<1e-6)
+					v--;
+				if (v<m)
+					System.out.println("Not found");
+				else{
+					
+					System.out.printf("%.0f\n", v);
+				}
+				//	System.out.println(disfactor);	
+//				BigDecimal v = BigDecimal.valueOf(m-1).divide(BigDecimal.valueOf(disfactor),7,RoundingMode.DOWN);
+//			//	System.out.println(v);
+//				BigDecimal ans = v.setScale(0, RoundingMode.DOWN);
+//				
+//				//System.out.println(ans.multiply(BigDecimal.valueOf(disfactor)).setScale(0, RoundingMode.DOWN));
+//				//System.out.println((BigDecimal.valueOf(m-1)));
+//				
+//				
+//				if (BigDecimal.valueOf(m-1).remainder(BigDecimal.valueOf(disfactor)).equals(BigDecimal.valueOf(0.0))){
+//					ans=ans.subtract(BigDecimal.ONE);
+//				//	System.out.println("T");
+//				}
+//				
+//				if (ans.compareTo(BigDecimal.valueOf(m))<0)
+//					System.out.println("Not found");
+//				else{
+//					System.out.println(ans);
+//				}
+			}
+		}
+	}
+}
