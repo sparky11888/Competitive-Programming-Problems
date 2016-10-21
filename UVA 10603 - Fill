@@ -1,0 +1,233 @@
+import java.io.*;
+import java.util.*;
+class distancepair{
+	int x1,y1,z1;
+	int distance;
+	distancepair prev;
+	distancepair(int x,int y, int z, int dist){
+		x1=x;
+		y1=y;
+		z1=z;
+		distance=dist;
+	}
+	public String toString (){
+		return ("X: "+x1+" Y: "+ y1+ " Z: "+z1+" Dist: "+distance);
+	}
+	public boolean equals(distancepair x){
+		if (x.x1==x1&&x.y1==y1&&x.z1==z1)
+			return true;
+		return false;
+	}
+	
+}
+
+public class Main {
+	static int pour;
+	static int target;
+	static int [] size=new int[3];
+	static int [][][] graphdistance=new int[201][201][201];
+	//static int [][][] visited=new int[201][201][201];
+	static ArrayList <String> visited;
+	static PriorityQueue <distancepair>pqueue;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		for (int i =0;i<iterations;i++){
+			int a,b,c;
+			pour=0;
+			a=input.nextInt();
+			b=input.nextInt();
+			c=input.nextInt();
+			visited=new ArrayList<String>();
+			target=input.nextInt();
+			size[0]=a;size[1]=b;size[2]=c;
+
+		//	System.out.println(graphdistance[0][0][0]);
+			
+			Comparator <distancepair> comp = new Comparator<distancepair>(){
+				public int compare(distancepair x, distancepair y){
+					if (x.distance<y.distance)
+						return -1;
+					else if (x.distance>y.distance)
+						return 1;
+					return 0;
+				}
+			};
+			pqueue = new PriorityQueue<distancepair>(comp);
+			pqueue.add(new distancepair(0,0,c,0));
+			
+			pour();
+			
+			
+		//	System.out.println("Finsiedh");
+		}
+	}
+	
+	static void pour (){
+		int pou =202;
+		int level=0;
+		distancepair prev=pqueue.peek();
+		distancepair data=pqueue.peek();
+		distancepair source=pqueue.peek();
+		data.prev=data;
+		do{
+			data=pqueue.remove();
+			int a,b,c;
+			a=data.x1;
+			b=data.y1;
+			c=data.z1;
+			if (!visited.contains(a+" "+b+" "+c)||(visited.contains(a+" "+b+" "+c)&&graphdistance[a][b][c]>=data.distance+graphdistance[data.prev.x1][data.prev.y1][data.prev.z1])){
+				graphdistance[a][b][c]=data.distance+graphdistance[data.prev.x1][data.prev.y1][data.prev.z1];
+				visited.add(a+" "+b+" "+c);
+			//	System.out.println("Data: "+data);
+			//	System.out.println(visited.contains(data));
+	//			if (prev.equals(source))
+				
+	//			
+	//			System.out.println("Current: "+data);
+	//			System.out.println("Previous: "+data.prev);
+	//			System.out.println("Distance: "+graphdistance[a][b][c]);
+				int [] p = new int[6];
+				int [][] point = new int [6][4];
+				if (size[1]-b>a){
+					point[0][0]=0;
+					point[0][1]=a+b;
+					point[0][2]=c;
+					point[0][3]=a;
+					//p[0]=pour (new distancepair(0,a+b,c,));
+				}
+				else{
+					point[0][0]=a-(size[1]-b);
+					point[0][1]=size[1];
+					point[0][2]=c;
+					point[0][3]=size[1]-b;
+					//p[0]=pour (a-(size[1]-b),size[1],c,d);
+				}
+				if (size[2]-c>a){
+					point[1][0]=0;
+					point[1][1]=b;
+					point[1][2]=c+a;
+					point[1][3]=a;
+					//p[1]=pour (0,b,c+a,d);
+				}
+				else{
+					point[1][0]=a-(size[2]-c);
+					point[1][1]=b;
+					point[1][2]=size[2];
+					point[1][3]=size[2]-c;
+					//p[1]=pour (a-(size[2]-c),b,size[2],d);
+				}
+				if (size[2]-c>b){
+					point[2][0]=a;
+					point[2][1]=0;
+					point[2][2]=c+b;
+					point[2][3]=b;
+					//p[2]=pour (a,0,c+b,d);
+				}
+				else{
+					point[2][0]=a;
+					point[2][1]=b-(size[2]-c);
+					point[2][2]=size[2];
+					point[2][3]=size[2]-c;
+				//	p[2]=pour (a,b-(size[2]-c),size[2],d);
+				}
+				if (size[0]-a>b){
+					point[3][0]=a+b;
+					point[3][1]=0;
+					point[3][2]=c;
+					point[3][3]=b;
+				//	p[3]=pour (a+b,0,c,d);
+				}
+				else{
+					point[3][0]=size[0];
+					point[3][1]=b-(size[0]-a);
+					point[3][2]=c;
+					point[3][3]=size[0]-a;
+				//	p[3]=pour (size[0],b-(size[0]-a),c,d);
+				}
+				if (size[1]-b>c){
+					point[4][0]=a;
+					point[4][1]=b+c;
+					point[4][2]=0;
+					point[4][3]=c;
+				//	p[4]=pour (a,b+c,0,d);
+				}
+				else{
+					point[4][0]=a;
+					point[4][1]=size[1];
+					point[4][2]=c-(size[1]-b);
+					point[4][3]=size[1]-b;
+				//	p[4]=pour (a,size[1],c-(size[1]-b),d);
+				}
+				if (size[0]-a>c){
+					point[5][0]=a+c;
+					point[5][1]=b;
+					point[5][2]=0;
+					point[5][3]=c;
+				//	p[5]=pour (a+c,b,0,d);
+				}
+				else{
+					point[5][0]=size[0];
+					point[5][1]=b;
+					point[5][2]=c-(size[0]-a);
+					point[5][3]=size[0]-a;
+				//	p[5]=pour (size[0],b,c-(size[0]-a),d);
+				}
+				for (int i =0;i<6;i++){
+					distancepair d = new distancepair(point[i][0],point[i][1],point[i][2],point[i][3]);
+					d.prev=data;
+				//	System.out.println(d);
+					if (!visited.contains(point[i][0]+" "+point[i][1]+" "+point[i][2])){//(visited[point[i][0]][point[i][1]][point[i][2]]!=1){
+						pqueue.add(d);
+					//	System.out.println("****ADDED");
+					}
+					else{
+						if (graphdistance[point[i][0]][point[i][1]][point[i][2]]>point[i][3]+graphdistance[a][b][c]){
+							pqueue.add(d);
+			//				System.out.println("****ADDED");
+						}
+					}
+				}
+				
+				if (((target-a)<=(target-level))&&(a<=target)){
+					if (target-a<target-level){
+						pou = graphdistance[a][b][c];
+						level=a;
+					}
+					else{
+						pou=Math.min(pou, graphdistance[a][b][c]);
+						level=a;
+					}
+				}
+				if (((target-b)<=(target-level))&&(b<=target)){
+					if ((target-b)<((target-level))){
+						pou = graphdistance[a][b][c];
+						level=b;
+					}
+					else{
+						pou=Math.min(pou, graphdistance[a][b][c]);
+						level=b;
+					}
+				}
+				if (((target-c)<=(target-level))&&(c<=target)){
+					if ((target-c)<((target-level))){
+						pou = graphdistance[a][b][c];
+						level=c;
+						
+					}
+					else{
+						pou=Math.min(pou, graphdistance[a][b][c]);
+						level=c;
+					}
+				}
+		//		System.out.println("PPPP: "+pou);
+	//			for (distancepair d:pqueue){
+	//				System.out.println("Qued: "+d);
+	//			}
+				//data=pqueue.remove();
+				
+			//	graphdistance[a][b][c]=data.distance+graphdistance[data.prev.x1][data.prev.y1][data.prev.z1];
+			}
+		}while(!pqueue.isEmpty());
+		System.out.println(pou+" "+level);
+	}
