@@ -1,0 +1,37 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		int iterations=input.nextInt();
+		for(int i=0;i<iterations;i++){
+			int mwidth,nlength,rcake,ccake;
+			mwidth=input.nextInt();
+			nlength=input.nextInt();
+			rcake=input.nextInt();
+			ccake=input.nextInt();
+			
+			process(mwidth,nlength,rcake,ccake);
+		}
+	}
+	static void process(int m,int n,int r,int c){
+		int up = r;
+		int down= m-r-1;
+		int left = c;
+		int right= n-c-1;
+		
+	
+
+		int nimsum = up^down^right^left;
+//		System.out.println(up+" "+down+" "+left+" "+right+" nim: "+nimsum);
+		
+		if (nimsum==0){
+			System.out.println("Hansel");
+		}
+		else{
+			System.out.println("Gretel");
+		}
+		
+	}
+}
