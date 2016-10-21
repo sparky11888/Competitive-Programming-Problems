@@ -1,0 +1,89 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	static int casenum=1;
+	static int [][] nodesdata;
+	static int [] isdominate;
+	static int numofnodes;
+	boolean dominate = false;
+	public static void main (String [] args) {
+		Scanner input = new Scanner (System.in);
+		Main m = new Main();
+		int iter = input.nextInt();
+		
+		for (int i = 0; i < iter; i ++){
+			numofnodes = input.nextInt();
+			nodesdata= new int [105][105];
+			isdominate= new int [105];
+			int [][]out=new int[105][105];
+			int []first = new int [105];
+			
+			for (int j = 0 ; j < numofnodes; j++){
+				for (int h = 0;h < numofnodes; h++){
+					nodesdata[j][h]=input.nextInt();
+				}
+			}
+			
+			m.dominate (0,-1);
+			for (int j = 0; j<105;j++)
+				first[j]=isdominate[j];
+			
+			for (int j =0;j<numofnodes;j++){
+				isdominate=new int [105];
+				m.dominate(0,j);
+				for (int h=0;h<numofnodes;h++){
+					if (first[h]!=isdominate[h])
+						out[j][h]=1;
+					else
+						out[j][h]=0;
+				}
+				out[j][j]=first[j];
+			}
+			
+			
+			m.print(out);
+			casenum++;
+		}
+	}
+	
+	
+	
+	void dominate (int x, int y){
+		if (x==y){
+			return;
+		}
+		isdominate[x]=1;
+		for (int i = 0; i< numofnodes;i++){
+			if (nodesdata[x][i]==1&&isdominate[i]==0)
+				dominate(i,y);
+		}
+	}
+
+	void print (int [][] data){
+		System.out.println("Case "+casenum+":");
+		for (int j = 0; j < numofnodes;j++){
+			for (int h = 0; h < 2*numofnodes+1;h++){
+				if (h==0||h==2*numofnodes)
+					System.out.print("+");
+				else
+					System.out.print("-");
+			}
+			System.out.println();
+			for (int h = 0; h < numofnodes;h++){
+				if (data[j][h]==1)
+					System.out.print("|Y");
+				else
+					System.out.print("|N");
+			}
+			System.out.print("|\n");
+		}
+		for (int h = 0; h < 2*numofnodes+1;h++){
+			if (h==0||h==2*numofnodes)
+				System.out.print("+");
+			else
+				System.out.print("-");
+		}
+		System.out.println();
+	}
+}
