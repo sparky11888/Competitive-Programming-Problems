@@ -1,0 +1,79 @@
+import java.awt.geom.Line2D;
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int [] items;
+	static int [] combosprice;
+	static int [][] comboscomp;
+	static int [] order;
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		while(input.hasNextInt()){
+			int numitems = input.nextInt();
+			items = new int [numitems];
+			for(int i =0;i<numitems;i++){
+				items [i]=input.nextInt();
+			}
+			int numcombos=input.nextInt();
+			combosprice = new int[numcombos];
+			comboscomp = new int [numcombos][numitems];
+			for(int i =0;i<numcombos;i++){
+				for(int j=0;j<numitems;j++){
+					comboscomp[i][j]=input.nextInt();
+				}
+				combosprice[i]=input.nextInt();
+			}
+			int numorders =input.nextInt();
+			for(int i =0;i<numorders;i++){
+				order = new int [numitems];
+				for(int j=0;j<numitems;j++){
+					order[j]=input.nextInt();
+				}
+				System.out.println(process(order));
+			}
+		}
+	}
+	static int process(int [] o){
+		int min=1000000000;
+		Boolean allzeros=true;
+		for(int i=0;i<o.length;i++){
+			if(o[i]>0)
+				allzeros=false;
+		}
+		if(allzeros)
+			return 0;
+		for (int i =0;i<combosprice.length;i++){
+			int [] bestcomb = new int [o.length];
+			boolean notcombo=false;
+			for(int j=0;j<comboscomp[0].length;j++){
+				if (o[j]-comboscomp[i][j]>=0){
+					bestcomb[j]=o[j]-comboscomp[i][j];
+					
+				}
+				else{
+					notcombo=true;
+					break;
+				}
+			}
+			int current;
+			if(notcombo){
+				int price =0;
+				for(int j=0;j<bestcomb.length;j++){
+					if (o[j]>0){
+						price+=items[j];
+						bestcomb[j]=o[j]-1;
+					}
+					
+				}
+				current = process(bestcomb)+price;
+			}
+			else{
+				current = process(bestcomb)+combosprice[i];
+			}
+			min= Math.min(min, current);
+		//	System.out.println("Min: "+min+" "+current );
+		}
+		return min;
+	}
+}
