@@ -1,0 +1,74 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String []args){
+		Scanner input = new Scanner (System.in);
+		String[] answer={"I","E","H","O","V","A"};
+		int iter = input.nextInt();
+		for (int i = 0; i < iter; i++){
+			int length, width, crow=0, ccol = 0;
+			length =input.nextInt();
+			width = input.nextInt();
+			
+			input.nextLine();
+			
+			String [][] cobble = new String [length][width];
+			for (int j = 0 ; j < length; j++){
+				String row = input.nextLine();
+				if (j==length-1){
+					ccol = row.indexOf("@");
+					crow=j;
+				}
+				String [] strchar = row.split("");
+				cobble[j]=strchar;
+				//System.out.println("Dfda");
+			}
+			for (int k = 0; k<=answer.length;k++){
+				//System.out.println("  dfdaf");
+				int row=0,col=0;
+				String dir ="";
+				for(int p=0;p<3;p++){
+					if (p==0){
+						row=crow;
+						col=ccol-1;
+						dir="left";
+					}
+					else if(p==1){
+						row=crow-1;
+						col=ccol;
+						dir="forth";
+					}
+					else{
+						row=crow;
+						col=ccol+1;
+						dir="right";
+					}
+					//System.out.println(row+" "+col);
+					if (!(row<0 || col<0||col>=width)){
+						//System.out.println("dfa");
+						if (k<answer.length){
+							//System.out.println(answer[k]);
+							//System.out.println(cobble[row][col]);
+							if (cobble[row][col].equals(answer[k])){
+								ccol=col;
+								crow=row;
+								System.out.print(dir+" ");
+								break;
+							}
+						}
+						else{
+							if (cobble[row][col].equals("#")){
+								ccol=col;
+								crow=row;
+								System.out.print(dir);
+								break;
+							}
+						}
+					}
+				}
+			}
+			System.out.println();
+		}
+	}
+}
