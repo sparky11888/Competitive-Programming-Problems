@@ -1,0 +1,39 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		while(input.hasNextLine()){
+			String quer = input.nextLine();
+			if (quer.equals("END"))
+				break;
+			else{
+				double quernum=Double.parseDouble(quer);		
+				if(process(quernum))
+					System.out.println("MEMBER");
+				else
+					System.out.println("NON-MEMBER");
+			}
+		}	
+	}
+	static boolean process(double query){
+		if (query == 1||query ==0){
+			return true;
+		}
+		else{
+			int places=0;
+			while(query!=0&&places<=6){
+				query*=3;
+				if ((int)query==1){
+					return false;
+				}
+				query=query-(int)query;
+		//		System.out.println("Now Q: "+query+" places: "+places);
+				places++;
+			}
+			return true;
+		}
+	}
+}
