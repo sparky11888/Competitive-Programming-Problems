@@ -1,0 +1,66 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static String [][] data;
+	static int [][] visited;
+	static int black,white;
+	static int [] coldir ={1,-1,0,0};
+	static int [] rowdir ={0,0,1,-1};
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		input.nextLine();
+		for(int iter =0;iter<iterations;iter++){
+			data =new String [9][9];
+			visited=new int [9][9];
+			
+			for(int i =0;i<9;i++){
+				data [i]= input.nextLine().split("");
+			}
+			int fblack=0,fwhite=0;
+			for (int i=0;i<9;i++){
+				for(int j=0;j<9;j++){
+					black=0;white=0;
+					if (data[i][j].equals("X")){
+						fblack++;
+					}
+					else if (data[i][j].equals("O")){
+						fwhite++;
+					}
+					else if (visited[i][j]!=1&&data[i][j].equals(".")){
+						int terrdots =flood(i,j);
+						if (black==0&&white!=0){
+							fwhite+=terrdots;
+						}
+						else if (black!=0&&white==0)
+							fblack+=terrdots;
+					}
+				}
+			}
+			System.out.println("Black "+fblack+ " White "+fwhite);
+		}
+	}
+	static int flood (int row,int col){
+		int dots=0;
+		if (data[row][col].equals("O"))
+			white++;
+		else if (data[row][col].equals("X"))
+			black++;
+		else{
+			if (visited[row][col]!=1){
+				visited[row][col]=1;
+				dots++;
+				for (int i=0;i<rowdir.length;i++){
+					int drow,dcol;
+					drow=row+rowdir[i];
+					dcol=col+coldir[i];
+					if (drow>=0&&drow<9&&dcol>=0&&dcol<9){
+						dots=dots+flood(drow,dcol);
+					}
+				}
+			}
+		}
+		return dots;
+	}
+}
