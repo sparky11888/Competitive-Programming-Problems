@@ -1,0 +1,66 @@
+import java.util.*;
+
+import javax.xml.crypto.Data;
+
+import java.io.*;
+
+public class Main {
+	int [] dx = {1,-1,0,0};
+	int [] dy = {0, 0, 1,-1};
+	static String [][] map;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main();
+		while (input.hasNextLine()){
+			//int width = input.nextInt();
+			//int height = input.nextInt();
+			String dimensions = input.nextLine();
+			String [] dimnum=dimensions.split(" ");
+			int width = Integer.parseInt(dimnum[0]);
+			int height= Integer.parseInt(dimnum[1]);
+			int x = 0,y = 0;
+			map = new String [height][width];
+		
+			for (int i = 0; i < height; i++){
+				String line = input.nextLine();
+				map[i]=line.split("");
+				if (line.contains("P")){
+					x=line.indexOf("P");
+					
+					y=i;
+				//	System.out.println("P: "+x+"."+y);
+				}
+			}
+			System.out.println(m.ffalgo(x,y));
+		
+		}
+	}
+	int ffalgo (int x, int y){
+		//System.out.println("Current: "+x +", "+y);
+		if (x < 0 || x >= map[0].length || y <0|| y >= map.length)
+			return 0;
+		if (map[y][x].equals("x")||map[y][x].equals("#")){
+			return 0;
+		}
+		int total;
+		if (map[y][x].equals("G"))
+			total = 1;
+		else{
+			total=0;
+		}
+		map[y][x]="x";
+		for (int d = 0; d < dx.length; d++){
+			int prx=x,pry=y;
+			prx+=dx[d];
+			pry+=dy[d];
+			if (!(prx < 0 || prx >= map[0].length || pry <0|| pry >= map.length)){
+				if(map[pry][prx].equals("T")){
+					return total;
+				}
+			}
+		}
+		for (int d = 0; d < dx.length; d++){
+			total+=ffalgo(x+dx[d],y+dy[d]);
+		}
+		return total;
+	}
