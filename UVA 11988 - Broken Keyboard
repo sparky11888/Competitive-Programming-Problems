@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+public class Main {
+	public static void main (String []args) throws IOException{
+		BufferedReader cin = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter p = new PrintWriter(System.out);
+		String input;
+
+		while ((input=cin.readLine())!=null){
+			boolean home=true;
+			char [] stream=input.toCharArray();
+			StringBuilder parts=new StringBuilder();
+			LinkedList<StringBuilder> result=new LinkedList<StringBuilder>();
+			for(int i=0;i<stream.length;i++){
+				if (stream[i]==('[')||stream[i]==(']')){
+					if (home){
+						result.addFirst(parts);
+					}
+					else
+						result.addLast(parts);
+					parts=new StringBuilder();
+					if (stream[i]=='[')
+						home=true;
+					else
+						home=false;
+				}
+				else
+					parts.append(stream[i]);
+			}
+			if (home)
+				result.addFirst(parts);
+			else
+				result.addLast(parts);
+			StringBuilder finres=new StringBuilder();
+			while(!result.isEmpty()){
+				finres.append(result.removeFirst());
+			}
+			System.out.println(finres.toString());
+		}
+	}
+}
