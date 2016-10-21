@@ -1,0 +1,48 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	static int data[][];
+	static int [][]finalscores;
+	static int hours;
+	static int courses;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		Main m=new Main();
+		int iter = input.nextInt();
+		for (int i = 0;i <iter;i++){
+			courses = input.nextInt();
+			hours = input.nextInt();
+			data = new int [courses][hours+1];
+			finalscores=new int [courses][hours+1];
+			for (int j = 0;j<data.length;j++){
+				for(int h =1;h<data[0].length;h++){
+					data[j][h]=input.nextInt();
+					finalscores[j][h]=-10000000;
+				}
+			}
+			m.score();
+		}
+	}
+	void score(){
+		for (int j=1;j<=hours;j++){
+			if (data[courses-1][j]>=5){
+				finalscores[courses-1][j]=data[courses-1][j];
+			}
+			else
+				finalscores[courses-1][j]=-10000000;
+		}
+		for (int j=courses-2;j>=0;j--){
+			for(int h=1;h<=hours;h++){
+				for(int k=1;k<h;k++){
+					if (data[j][k]>=5)
+						finalscores[j][h]=Math.max(finalscores[j][h], data[j][k]+finalscores[j+1][h-k]);
+				}
+			}
+		}
+		if(finalscores[0][hours]>=5*courses)
+			System.out.printf("Maximal possible average mark - %.2f.\n",(double)finalscores[0][hours]/courses);
+		else
+			System.out.println("Peter, you shouldn't have played billiard that much.");
+	}
+}
