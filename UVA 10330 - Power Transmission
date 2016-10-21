@@ -1,0 +1,111 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int [][] resgraph;
+	static int [] vertex;
+	static int [] capacity;
+	static int minedge;
+	static int minvertex;
+//	static ArrayList <String> sizes=new ArrayList<String>();
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+
+		while (input.hasNextLine()){
+			int regulators = input.nextInt();
+			resgraph = new int [regulators*2+2][regulators*2+2];
+			vertex=new int[regulators*2+2];
+			capacity = new int[regulators*2+2];
+			for (int i=1;i<=regulators;i++){
+				resgraph[i][i+regulators]=input.nextInt();
+	//			System.out.println("Capacity; "+i+ " "+capacity[i]);
+			}
+			int links = input.nextInt();
+			for (int i = 0;i<links;i++){
+				int b1,b2,c;
+				b1=input.nextInt();
+				b2=input.nextInt();
+				c=input.nextInt();
+				resgraph[b1+regulators][b2]=c;
+				
+			//	System.out.println(b1+ " to "+ b2+ " Capatcity of "+c);
+			}
+			int sourcev, sinkv;
+			sourcev=input.nextInt();
+			sinkv=input.nextInt();
+			for (int i =1;i<=sourcev;i++){
+				int bindex=input.nextInt();
+				resgraph[0][bindex]=Integer.MAX_VALUE;
+		//		System.out.println(bindex+"Source");
+			}
+			for (int i= 1;i<=sinkv;i++){
+				int sindex=input.nextInt();
+				resgraph[sindex+regulators][resgraph.length-1]=Integer.MAX_VALUE;
+		//		System.out.println(sindex+"Sink");
+			}
+			
+//			for (int i =0;i<resgraph.length;i++){
+//				for(int j =0;j<resgraph.length;j++){
+//					System.out.print(resgraph[i][j]+" ");
+//				}
+//				System.out.println();
+//			}
+//			
+			int mf = maxflow();
+			System.out.println(mf);
+			input.nextLine();
+		}
+		
+			
+
+		
+	}
+	static int maxflow (){
+		int maxf=0;
+		minedge=0;
+		Queue <Integer> q = new LinkedList<Integer>();
+		int []distance=new int[resgraph.length];
+		Arrays.fill(distance, -1);
+		distance[0]=0;
+		q.add(0);
+		Arrays.fill(vertex, -1);
+		while(!q.isEmpty()){
+			int currvertex = q.remove();
+	//		System.out.println("Current Vertex _______" +currvertex);
+			if(currvertex==resgraph.length-1){
+	//			System.out.println("BREAK: BFS complete");
+				break;
+			}
+			for (int i=0;i<resgraph.length;i++){
+				
+				if (resgraph[currvertex][i]>0&&distance[i]==-1){
+	//				System.out.println("DFDAPOOP");
+					distance[i]=distance[currvertex]+resgraph[currvertex][i];
+	//				System.out.println("DISTANCE! "+i+" "+distance[i]);
+					q.add(i);
+					vertex[i]=currvertex;
+				}
+			}
+		}
+		augment(resgraph.length-1, 100000000);
+		//System.out.println("***"+minedge);
+		if (minedge==0){
+			return maxf;
+		}
+		else{
+			return maxf+minedge+maxflow();
+		}
+	}
+	static void augment(int v, int min){
+		if(v==0){
+			minedge=min;
+			return;
+		}
+		else if (vertex[v]!=-1){
+			augment(vertex[v],Math.min(resgraph[vertex[v]][v],min));
+			resgraph[vertex[v]][v]-=minedge;
+			resgraph[v][vertex[v]]+=minedge;
+		}
+	}
+
+}
