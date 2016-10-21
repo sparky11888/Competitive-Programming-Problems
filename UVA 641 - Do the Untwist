@@ -1,0 +1,46 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static HashMap<String, Integer> lettonum=new HashMap<String,Integer>();
+	static HashMap<Integer,String> numtolet=new HashMap<Integer,String>();
+	public static void main (String[] args){
+		Scanner input = new Scanner (System.in);
+		createkey();
+		while(input.hasNextLine()){
+			int k = input.nextInt();
+			if (k==0){
+				break;
+			}
+			
+			String code = input.next().trim();
+			process(code, k);
+		}
+	}
+	static void process(String q, int k){
+		String [] decipher = new String[q.length()];
+		for (int i=1;i<=q.length();i++){
+			String s=q.substring(i-1,i);
+			//System.out.println(s);
+			int ccode = lettonum.get(s);
+			decipher[(k*(i-1))%q.length()] = numtolet.get((ccode+(i-1))%(28));
+			//System.out.println(ccode+" "+pcode);
+			
+		}
+		for(int i =0;i<decipher.length;i++){
+			System.out.print(decipher[i]+"");
+		}
+		System.out.println();
+	}
+	static void createkey(){
+		lettonum.put("_", 0);
+		lettonum.put(".", 27);
+		numtolet.put(0, "_");
+		numtolet.put(27, ".");
+		for (int i=1;i<=26;i++){
+			String s = Character.toString((char)(i+96)).trim();
+			lettonum.put(s, i);
+			numtolet.put(i, s);
+		}
+	}
+}
