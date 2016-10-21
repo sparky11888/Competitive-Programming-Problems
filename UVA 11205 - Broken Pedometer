@@ -1,0 +1,153 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static ArrayList<String[]> turnoff = new ArrayList <String[]>();
+	public static void main (String []args){
+		Scanner input = new Scanner (System.in);
+		Main m = new Main();
+		int iter = input.nextInt();
+		for (int p=0; p < iter; p++){
+			int leds=input.nextInt();
+			int symbolnum=input.nextInt();
+			boolean result=true;
+			int count=0;
+			//System.out.println("LEDS: "+leds);
+			//System.out.println("Symbolnum "+symbolnum);
+			String [][] codes = new String [symbolnum][leds];
+			int[] possible = new int[leds];
+			input.nextLine();
+			
+			
+			for (int i = 0; i < codes.length;i++){
+				codes[i]=input.nextLine().split(" ");
+			}
+			//System.out.println("PPP: "+codes.length);
+			for(int k =0; k<leds;k++){
+				possible[k]=k;
+			}
+			if(symbolnum==1){
+				System.out.println(0);
+			}	
+			else{
+				for (int k =1; k <=leds; k++){
+					
+					//System.out.println("Size: "+k);
+					int num=leds-1;
+					
+			        getCombination(possible, possible.length, k);
+			        result=true;
+			     //   System.out.println("UU:" +turnoff.size());
+			      // System.out.println(turnoff.get(0)[0]);
+			        
+			        
+			        for (String[] e : turnoff){
+			        	//System.out.println("DDf");
+			        	String [][]modifiedcodes=new String [codes.length][codes[0].length];
+			        	for(int u=0;u<codes.length;u++)
+			        		for(int h=0;h<codes[0].length;h++)
+			        			modifiedcodes[u][h]=codes[u][h];
+			        	
+			        	
+			        	
+			        	//System.out.println("YY: "+e[0]);
+			        	//e[0]=0;
+			        	for (int y = 0; y < e.length; y++){
+			        		String current = e[y];
+			        		//System.out.println("Length: "+ e.length);
+			        		//System.out.println("Current: "+current);
+			        		for (int l = 0; l<codes.length;l++){
+			        			modifiedcodes[l][Integer.parseInt(current)]="0";
+			        			
+			        			//System.out.println(modifiedcodes[l][current]);
+			        		}
+			        	}
+			        	
+//			        	for(int o=0;o<modifiedcodes.length;o++){
+//			        		//System.out.println("modified: "+modifiedcodes.length);
+//			        		for(int m1=0;m1<modifiedcodes[0].length;m1++){
+//			        			//System.out.print(modifiedcodes[o][m1] +" ");
+//			        			//System.out.print("***: "+codes[o][m1]+ " ");
+//			        		}
+//			        		System.out.println();
+//			        	}
+//			        	
+			        	
+			        	result=m.same(modifiedcodes);
+			        //	System.out.println(k+" size "+result);
+			        	if(!result){
+			        	//	System.out.println("Broke");
+			        		turnoff.clear();
+				        //	System.out.println(turnoff.isEmpty());
+				 
+			        		break;
+			        	}
+			        	
+			        }
+			        if(result){
+			        	count=leds-(k-1);
+			        	System.out.println(count);
+			        	turnoff.clear();
+			        //	System.out.println(turnoff.isEmpty());
+			        	break;
+			        }
+	
+				}
+			}
+		}
+	}
+	
+	boolean same (String [][] codes){
+		String []current;
+		boolean result = false;
+		for (int i = 0; i < codes.length;i++){
+			current=codes[i];
+			for(int j = 0; j <codes.length;j++){
+				if (j!=i){
+					result=true;
+					for(int p = 0; p <codes[0].length;p++){
+						if (!(current[p].equals(codes[j][p]))){
+							result=false;
+							break;
+						}
+					}
+					if (result==true)
+						return result;
+				}
+			}
+		}
+		return false;
+		
+	}
+	static void combinations(int possible[],int combos[],int start,int end, int pos, int size){
+		if (pos == size)
+        {
+			String[]added=new String[size];
+			//System.out.println("Poop: "+combos[0]);
+            for (int j=0; j<size; j++){
+                //System.out.print(combos[j]+"*");
+                added[j]=combos[j]+"";
+                
+            }
+           // System.out.println();
+            //System.out.println("");
+            turnoff.add(added);
+//            for (int b=0;b<size;b++){
+//            	if (combos[b]==0){
+//            		turnoff.get(turnoff.size()-1)[b]=0+"";
+//            		System.out.println(turnoff.get(turnoff.size()-1)[b]);
+//            	}
+//            }
+            return;
+        }
+	    for (int i=start; i<=end && end-i+1 >= size-pos; i++)
+        {
+            combos[pos] = possible[i];
+            combinations(possible, combos, i+1, end, pos+1, size);
+        }
+	}
+	static void getCombination(int arr[], int total ,int size){
+		int data[]=new int[size];
+		combinations(arr,data,0,total-1,0,size);
+	}
+}
