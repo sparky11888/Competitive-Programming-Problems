@@ -1,0 +1,14 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main (String [] args){
+		Scanner input =new Scanner (System.in);
+		while(input.hasNextInt()){
+			int quer = input.nextInt();
+			if (quer==0)
+				break;
+			System.out.println("1/2");
+		}
+	}
+}
