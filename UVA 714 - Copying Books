@@ -1,0 +1,113 @@
+import java.awt.geom.Line2D;
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int [] pages;
+	static String [] scribes;
+	public static void main (String [] args){
+		Scanner input = new Scanner (System.in);
+		int iterations = input.nextInt();
+		
+		for(int i =0;i<iterations;i++){
+			double high=0,low=0;
+			int mbooks=input.nextInt();
+			pages = new int[mbooks];
+			int kscribes=input.nextInt();
+			scribes = new String [kscribes];
+			for(int j=0;j<mbooks;j++){
+				pages[j]=input.nextInt();
+				low =Math.max(low, pages[j]);
+				high+=pages[j];
+			}
+			int quer = binarysearchopt(low,high);
+			printlist(quer);
+		}
+	}
+	static void printlist (int quer){
+		String ans="";
+		int curr,prev, currtotal=0;
+		int rembooks,remscribes;
+		rembooks=pages.length;
+		remscribes=scribes.length;
+		for (int i=pages.length-2;i>=0;i--){
+			prev=pages[i+1];
+			curr=pages[i];
+			currtotal+=prev;
+			ans=prev+" "+ans;
+			if (remscribes==rembooks){
+				for(int j=i;j>=0;j--){
+		//			System.out.println(pages[j]);
+					ans=pages[j]+" / "+ans;
+				}
+				break;
+			}
+			if (currtotal+curr>quer){
+				currtotal=0;
+				ans="/ "+ans;
+				remscribes--;
+			}
+			if (i==0){
+				ans=curr+" "+ans;
+			}
+			rembooks--;
+		}
+		ans=ans.trim();
+		System.out.println(ans);
+	}
+	static public int binarysearchopt(double l,double h){
+	//	System.out.println(l+" "+h);
+		int quer = (int)l+(int)((int)(h-l)/(int)2);
+		scribes = new String [scribes.length];
+		int sin=0;
+		int remscribes = scribes.length;
+		int rembooks = pages.length;
+		int current,prev, currentsum=0, end=0;
+		int ans=Integer.MAX_VALUE;
+		
+		for (int i =1;i<pages.length;i++){
+			prev = pages[i-1];
+			current= pages[i];
+			currentsum+=prev;
+			if (remscribes==rembooks){
+				end=pages.length-1;
+				sin=scribes.length-1;
+				ans=quer;
+				break;
+			}
+			if (currentsum+current>quer){
+				currentsum=0;
+				sin++;
+				remscribes--;
+				if (sin==scribes.length){
+					end = i;
+					break;
+				}
+			}
+			rembooks--;
+			end=i;
+		}
+		
+		if (l-h==0){
+			if(sin==scribes.length-1&&!(end<pages.length-1))
+				return(int)l;
+			else
+				return ans;
+		}
+		else if (l-h==1){
+			if(sin==scribes.length-1&&!(end<pages.length-1))
+				ans= (int)l;
+			return Math.min(ans, binarysearchopt(h,h));
+		}
+		else if (sin==scribes.length-1&&!(end<pages.length-1)){
+			ans =quer;
+			return Math.min(ans,binarysearchopt(l,quer-1));
+		}
+		else{
+			if (sin==scribes.length)
+				return binarysearchopt(quer+1,h);
+			else //(sin<=scribes.length-1-1)
+				return	Math.min(ans,binarysearchopt(l,quer-1));
+		}	
+	}
+}
